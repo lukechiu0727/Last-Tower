@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>CYBER CITADEL: ARCADE DEFENSE</title>
+  <!-- Cyber Vector Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='neonG' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2322d3ee'/%3E%3Cstop offset='50%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3CradialGradient id='coreG' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='70%25' stop-color='%230891b2'/%3E%3Cstop offset='100%25' stop-color='%23020617'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='%23030712' stroke='%230891b2' stroke-width='3'/%3E%3Cpolygon points='50,14 82,32 82,68 50,86 18,68 18,32' fill='none' stroke='%2322d3ee' stroke-width='3' stroke-dasharray='8 4'/%3E%3Ccircle cx='50' cy='50' r='24' fill='url(%23coreG)' stroke='%2338bdf8' stroke-width='2'/%3E%3Cpath d='M50,26 L50,74 M26,50 L74,50' stroke='%23a5f3fc' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpolygon points='50,38 60,50 50,62 40,50' fill='%23ffffff'/%3E%3Ccircle cx='50' cy='50' r='3' fill='%23ec4899'/%3E%3C/svg%3E">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #030612;
+      font-family: 'Rajdhani', sans-serif;
+      color: #f1f5f9;
+    }
+    .font-arcade {
+      font-family: 'Orbitron', monospace;
+    }
+    .neon-cyan {
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.9), 0 0 20px rgba(6, 182, 212, 0.5);
+    }
+    .neon-gold {
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.9), 0 0 20px rgba(250, 204, 21, 0.5);
+    }
+    .glass-ui {
+      background: rgba(9, 14, 32, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.96); opacity: 0.9; }
+      50% { transform: scale(1.03); opacity: 1; }
+      100% { transform: scale(0.96); opacity: 0.9; }
+    }
+    .pulse-glow {
+      animation: pulse-ring 1.2s infinite ease-in-out;
+    }
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes spin-reverse {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+    @keyframes core-pulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.9)); }
+      50% { transform: scale(1.1); filter: drop-shadow(0 0 22px rgba(236, 72, 153, 0.95)); }
+    }
+    .animate-spin-slow {
+      animation: spin-slow 16s linear infinite;
+    }
+    .animate-spin-reverse {
+      animation: spin-reverse 10s linear infinite;
+    }
+    .animate-core-pulse {
+      animation: core-pulse 2.2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="relative w-screen h-screen overflow-hidden select-none bg-[#020510]">
+
+  <!-- GAME CANVAS -->
+  <canvas id="gameCanvas" class="absolute inset-0 z-0 block w-full h-full cursor-crosshair"></canvas>
+
+  <!-- TOP HEADER HUD -->
+  <header class="absolute top-0 left-0 right-0 z-20 pointer-events-none p-2 sm:p-4 flex justify-between items-start gap-2">
+    <!-- Citadel Health & Shield -->
+    <div class="pointer-events-auto flex flex-col gap-1 glass-ui p-2.5 sm:p-3 rounded-2xl border border-cyan-500/40 min-w-[145px] sm:min-w-[210px]">
+      <div class="flex justify-between items-center text-[11px] sm:text-xs font-arcade font-bold">
+        <span class="text-cyan-400">CORE HULL</span>
+        <span id="hpText" class="text-emerald-400 font-black">250/250</span>
+      </div>
+      <div class="w-full h-3 sm:h-3.5 bg-black/60 rounded-full overflow-hidden p-0.5 border border-cyan-500/50">
+        <div id="hpBar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full transition-all duration-150" style="width: 100%"></div>
+      </div>
+
+      <div class="flex justify-between items-center text-[10px] sm:text-[11px] font-arcade mt-0.5">
+        <span class="text-indigo-300">SHIELD</span>
+        <span id="shieldText" class="text-indigo-200">100/100</span>
+      </div>
+      <div class="w-full h-2 bg-black/60 rounded-full overflow-hidden p-0.5 border border-indigo-500/50">
+        <div id="shieldBar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-400 rounded-full transition-all duration-150" style="width: 100%"></div>
+      </div>
+
+      <!-- Currency & Second Wind Badge -->
+      <div class="flex items-center justify-between pt-1 border-t border-cyan-500/20 text-xs sm:text-sm font-arcade">
+        <div class="text-amber-300 font-black flex items-center gap-1 neon-gold">
+          <span>⚡</span>
+          <span id="scrapCount">0</span> CR
+        </div>
+        <div id="secondWindBadge" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/60 font-bold" title="Survives 1 fatal blow">
+          REVIVE: READY
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Wave & Score Display -->
+    <div class="pointer-events-auto text-center flex flex-col items-center">
+      <div class="glass-ui px-3 sm:px-6 py-1.5 sm:py-2 rounded-2xl border border-cyan-500/50 shadow-lg">
+        <div class="text-[10px] sm:text-xs font-arcade text-gray-300 tracking-wider">
+          WAVE <span id="waveNumber" class="text-cyan-300 font-black text-sm sm:text-lg">1</span>
+          <span id="difficultyBadge" class="ml-1 text-[9px] px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-700">CASUAL</span>
+        </div>
+        <div id="scoreDisplay" class="font-arcade text-lg sm:text-2xl font-black text-white neon-cyan tracking-wider">000000</div>
+      </div>
+      
+      <!-- Warning Alert Banner -->
+      <div id="alertBanner" class="hidden mt-2 font-arcade font-bold text-xs sm:text-sm text-amber-300 bg-amber-950/85 px-3 py-1 rounded-xl border border-amber-500/80 pulse-glow">
+        ⚠️ INCOMING HOSTILE BARRAGE
+      </div>
+    </div>
+
+    <!-- Right: Quick Action Buttons -->
+    <div class="pointer-events-auto flex items-center gap-1.5 sm:gap-2">
+      <button id="upgradeBtn" class="glass-ui border-2 border-amber-400 hover:border-amber-300 text-amber-300 px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-xl font-arcade font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-lg active:scale-95 transition-all">
+        <span>⚙️</span>
+        <span class="hidden sm:inline">SHOP</span>
+      </button>
+      <button id="soundBtn" class="glass-ui border border-cyan-500/50 text-cyan-300 p-2 sm:p-2.5 rounded-xl font-arcade text-sm active:scale-95 transition-all">
+        🔊
+      </button>
+      <button id="pauseBtn" class="glass-ui border border-cyan-500/50 text-cyan-300 p-2 sm:p-2.5 rounded-xl font-arcade text-sm active:scale-95 transition-all">
+        ⏸
+      </button>
+    </div>
+  </header>
+
+  <!-- BOTTOM MOBILE CONTROL TRAY -->
+  <footer class="absolute bottom-3 sm:bottom-4 left-0 right-0 z-20 pointer-events-none px-3 sm:px-6 flex justify-between items-end gap-2">
+    <!-- Left: Toggles (Auto Aim & Auto Fire) -->
+    <div class="pointer-events-auto flex flex-col gap-2">
+      <button id="toggleAutoAim" class="glass-ui border-2 border-emerald-400 text-emerald-300 px-3 py-2 rounded-xl text-xs font-arcade font-bold tracking-wider active:scale-95 transition-all shadow-md flex items-center gap-2">
+        <span id="autoAimLed" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+        AUTO-AIM: <span id="autoAimText">ON</span>
+      </button>
+      <button id="toggleAutoFire" class="glass-ui border border-cyan-400 text-cyan-300 px-3 py-1.5 rounded-xl text-[11px] font-arcade font-semibold active:scale-95 transition-all shadow-md flex items-center gap-2">
+        <span id="autoFireLed" class="w-2 h-2 rounded-full bg-cyan-400"></span>
+        AUTO-FIRE: <span id="autoFireText">ON</span>
+      </button>
+    </div>
+
+    <!-- Right: Super Buttons -->
+    <div class="pointer-events-auto flex gap-2 sm:gap-3">
+      <button id="btnEmp" class="relative glass-ui border-2 border-cyan-400 rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center active:scale-90 transition-transform shadow-xl overflow-hidden">
+        <div id="empCdOverlay" class="absolute inset-0 bg-cyan-950/85 origin-bottom transition-all pointer-events-none" style="height: 0%;"></div>
+        <span class="relative z-10 text-xl sm:text-2xl">⚡</span>
+        <span class="relative z-10 text-[9px] font-arcade font-bold text-cyan-200">EMP [1]</span>
+      </button>
+
+      <button id="btnStorm" class="relative glass-ui border-2 border-pink-400 rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center active:scale-90 transition-transform shadow-xl overflow-hidden">
+        <div id="stormCdOverlay" class="absolute inset-0 bg-pink-950/85 origin-bottom transition-all pointer-events-none" style="height: 0%;"></div>
+        <span class="relative z-10 text-xl sm:text-2xl">🔥</span>
+        <span class="relative z-10 text-[9px] font-arcade font-bold text-pink-200">STORM [2]</span>
+      </button>
+
+      <button id="btnMissiles" class="relative glass-ui border-2 border-amber-400 rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center active:scale-90 transition-transform shadow-xl overflow-hidden">
+        <div id="missilesCdOverlay" class="absolute inset-0 bg-amber-950/85 origin-bottom transition-all pointer-events-none" style="height: 0%;"></div>
+        <span class="relative z-10 text-xl sm:text-2xl">🚀</span>
+        <span class="relative z-10 text-[9px] font-arcade font-bold text-amber-200">SWARM [3]</span>
+      </button>
+    </div>
+  </footer>
+
+  <!-- UPGRADE TERMINAL MODAL -->
+  <div id="upgradeModal" class="hidden absolute inset-0 z-40 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
+    <div class="glass-ui border-2 border-cyan-400 rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="flex justify-between items-center pb-3 border-b border-cyan-500/30">
+        <div>
+          <h2 class="font-arcade text-lg sm:text-2xl font-black text-cyan-300 neon-cyan">ARSENAL LAB</h2>
+          <p class="text-xs text-gray-300">Equip powerful upgrades to dominate the swarm</p>
+        </div>
+        <button id="closeUpgradeBtn" class="text-gray-400 hover:text-white font-arcade text-xl p-2">✕</button>
+      </div>
+
+      <div class="my-3 flex justify-between items-center bg-cyan-950/50 p-2.5 rounded-xl border border-cyan-500/40 font-arcade">
+        <span class="text-xs text-gray-300">CYBER CREDITS:</span>
+        <span id="modalCreditCount" class="font-black text-amber-300 text-base sm:text-lg neon-gold">0 CR</span>
+      </div>
+
+      <div id="upgradeList" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
+
+      <div class="mt-3 pt-3 border-t border-cyan-500/30 flex justify-end">
+        <button id="resumeFromUpgradeBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-arcade font-bold text-xs sm:text-sm tracking-wider shadow-lg active:scale-95 transition-all">
+          APPLY TECH & RESUME
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- START & DIFFICULTY SELECTION MODAL -->
+  <div id="startModal" class="absolute inset-0 z-50 bg-[#020510]/95 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-ui border-2 border-cyan-400 rounded-3xl max-w-md w-full p-5 sm:p-7 text-center shadow-2xl">
+      
+      <!-- CYBER APEX APP EMBLEM -->
+      <div class="relative w-24 h-24 mx-auto mb-3 flex items-center justify-center">
+        <!-- Outer Glowing Aura -->
+        <div class="absolute inset-0 rounded-3xl bg-gradient-to-tr from-cyan-500/25 via-sky-500/10 to-pink-500/30 blur-xl animate-pulse"></div>
+
+        <!-- Main Glass Shield Container -->
+        <div class="relative w-24 h-24 rounded-3xl bg-[#030718]/90 border-2 border-cyan-400/80 shadow-[0_0_30px_rgba(6,182,212,0.4)] flex items-center justify-center overflow-hidden">
+          <!-- Background Cyber Grid Texture -->
+          <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#22d3ee_1px,transparent_1px)] [background-size:10px_10px]"></div>
+
+          <!-- Rotating Outer Tactical Ring -->
+          <svg class="absolute w-20 h-20 animate-spin-slow" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#06b6d4" stroke-width="2" stroke-dasharray="14 10" opacity="0.6"/>
+            <circle cx="50" cy="50" r="36" fill="none" stroke="#f472b6" stroke-width="1.5" stroke-dasharray="6 14" opacity="0.7"/>
+          </svg>
+
+          <!-- Counter-Rotating Tech Reticle -->
+          <svg class="absolute w-14 h-14 animate-spin-reverse" viewBox="0 0 60 60">
+            <polygon points="30,4 56,30 30,56 4,30" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.8"/>
+          </svg>
+
+          <!-- Central Ion Core & Fortress Turret -->
+          <div class="relative z-10 animate-core-pulse flex items-center justify-center">
+            <svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+              <polygon points="24,3 41,12 41,36 24,45 7,36 7,12" fill="#082f49" stroke="#22d3ee" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="24" cy="24" r="8" fill="#0284c7" stroke="#e0f2fe" stroke-width="2"/>
+              <line x1="24" y1="9" x2="24" y2="39" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="9" y1="24" x2="39" y2="24" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+              <polygon points="24,19 28,24 24,29 20,24" fill="#ffffff"/>
+            </svg>
+          </div>
+
+          <!-- Corner Cyber Brackets -->
+          <div class="absolute top-1.5 left-1.5 w-2 h-2 border-t-2 border-l-2 border-cyan-300"></div>
+          <div class="absolute top-1.5 right-1.5 w-2 h-2 border-t-2 border-r-2 border-cyan-300"></div>
+          <div class="absolute bottom-1.5 left-1.5 w-2 h-2 border-b-2 border-l-2 border-pink-400"></div>
+          <div class="absolute bottom-1.5 right-1.5 w-2 h-2 border-b-2 border-r-2 border-pink-400"></div>
+        </div>
+      </div>
+
+      <h1 class="font-arcade text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-200 to-pink-500 neon-cyan mb-1">
+        CYBER CITADEL
+      </h1>
+      <p class="font-arcade text-xs text-cyan-300 mb-4 tracking-widest">ARCADE SURVIVAL DEFENSE</p>
+
+      <div class="bg-gray-950/80 border border-cyan-800/70 rounded-xl p-3 text-left text-xs space-y-1.5 mb-4 text-gray-300">
+        <p class="text-emerald-400 font-bold">✨ Designed for Relaxed Mobile Play:</p>
+        <p>• <b class="text-white">Smart Auto-Aim</b> tracks threats automatically. Touch anywhere to manually guide shots.</p>
+        <p>• <b class="text-white">Second Wind</b> prevents sudden defeat by reviving you once per match.</p>
+        <p>• Enemies drop <b class="text-emerald-300">Repair Orbs</b>, <b class="text-amber-300">Credits</b>, and <b class="text-pink-300">Nova Screen Bombs</b>!</p>
+      </div>
+
+      <div class="mb-5 text-left">
+        <label class="block text-[11px] font-arcade text-gray-400 mb-1.5 font-bold uppercase">Select Difficulty Mode:</label>
+        <div class="grid grid-cols-3 gap-2">
+          <button data-diff="casual" class="diff-btn active py-2 rounded-xl font-arcade text-xs font-bold border-2 border-emerald-400 bg-emerald-950/60 text-emerald-300">
+            CASUAL
+          </button>
+          <button data-diff="normal" class="diff-btn py-2 rounded-xl font-arcade text-xs font-bold border border-cyan-700 bg-gray-900/60 text-gray-300">
+            NORMAL
+          </button>
+          <button data-diff="hard" class="diff-btn py-2 rounded-xl font-arcade text-xs font-bold border border-rose-900 bg-gray-900/60 text-gray-400">
+            HARD
+          </button>
+        </div>
+      </div>
+
+      <button id="startGameBtn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-arcade font-black text-sm sm:text-base tracking-wider shadow-lg shadow-cyan-500/30 active:scale-95 transition-all">
+        START DEFENSE MISSION
+      </button>
+    </div>
+  </div>
+
+  <!-- GAME OVER MODAL -->
+  <div id="gameOverModal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-ui border-2 border-rose-500 rounded-3xl max-w-sm w-full p-5 sm:p-7 text-center shadow-2xl">
+      <h2 class="font-arcade text-2xl font-black text-rose-500 tracking-wider mb-1">RUN COMPLETE</h2>
+      <p class="text-xs text-rose-300 mb-4 font-semibold uppercase">Citadel Hull Breached</p>
+
+      <div class="bg-gray-950/80 border border-gray-800 rounded-xl p-3 mb-5 space-y-2 text-left text-xs font-arcade">
+        <div class="flex justify-between">
+          <span class="text-gray-400">SCORE:</span>
+          <span id="finalScore" class="font-bold text-cyan-300">0</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">HIGH SCORE:</span>
+          <span id="bestScore" class="font-bold text-amber-300">0</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">WAVES CLEARED:</span>
+          <span id="finalWave" class="font-bold text-white">0</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">ENEMIES DESTROYED:</span>
+          <span id="finalKills" class="font-bold text-emerald-400">0</span>
+        </div>
+      </div>
+
+      <button id="restartBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 text-white font-arcade font-bold text-xs sm:text-sm tracking-wider shadow-lg active:scale-95 transition-all">
+        PLAY AGAIN
+      </button>
+    </div>
+  </div>
+
+  <!-- PAUSE MODAL -->
+  <div id="pauseModal" class="hidden absolute inset-0 z-40 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-ui border border-cyan-400 rounded-2xl max-w-xs w-full p-5 text-center">
+      <h2 class="font-arcade text-lg font-bold text-white mb-3">MISSION PAUSED</h2>
+      <div class="space-y-2">
+        <button id="resumePauseBtn" class="w-full py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-arcade font-bold text-xs tracking-wider">RESUME</button>
+        <button id="restartFromPauseBtn" class="w-full py-2.5 rounded-lg bg-gray-800 text-rose-400 font-arcade font-bold text-xs tracking-wider">RESTART</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       AUDIO SYNTHESIZER
+       ========================================================= */
+    class RetroAudio {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playLaser() {
+        if (this.muted || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(140, now + 0.1);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      }
+      playExplosion(isBig = false) {
+        if (this.muted || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const duration = isBig ? 0.45 : 0.2;
+        const bufferSize = this.ctx.sampleRate * duration;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.35));
+        }
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(isBig ? 450 : 700, now);
+        filter.frequency.linearRampToValueAtTime(50, now + duration);
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(isBig ? 0.35 : 0.18, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + duration);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+        noise.start(now);
+      }
+      playEmp() {
+        if (this.muted || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(200, now);
+        osc.frequency.exponentialRampToValueAtTime(1100, now + 0.25);
+        osc.frequency.exponentialRampToValueAtTime(60, now + 0.6);
+        gain.gain.setValueAtTime(0.28, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.6);
+      }
+      playHeal() {
+        if (this.muted || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        [440, 554, 659, 880].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.05);
+          gain.gain.setValueAtTime(0.1, now + idx * 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.08);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.05);
+          osc.stop(now + idx * 0.05 + 0.08);
+        });
+      }
+      playPickup() {
+        if (this.muted || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      }
+    }
+    const audio = new RetroAudio();
+
+    /* =========================================================
+       GAME STATE & CONFIGURATION
+       ========================================================= */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let centerX = 0;
+    let centerY = 0;
+
+    let gameState = 'START';
+    let selectedDifficulty = 'casual';
+    let score = 0;
+    let highScore = parseInt(localStorage.getItem('cyber_citadel_casual_hi') || '0', 10);
+    let credits = 30;
+    let currentWave = 1;
+    let enemiesToSpawn = 0;
+    let waveSpawnTimer = 0;
+    let totalKills = 0;
+    let screenShake = 0;
+
+    const citadel = {
+      radius: 40,
+      maxHp: 250,
+      hp: 250,
+      maxShield: 100,
+      shield: 100,
+      shieldRegen: 0.25,
+      shieldDelay: 0,
+      angle: -Math.PI / 2,
+      fireCooldown: 0,
+      recoil: 0,
+      autoAim: true,
+      autoFire: true,
+      hasSecondWind: true,
+      isManualAiming: false
+    };
+
+    const upgrades = {
+      cannons: { level: 1, max: 4, name: "Multi-Cannon Spreader", desc: "Adds twin, triple & quad auto spread blasters.", cost: 25 },
+      fireRate: { level: 1, max: 6, name: "Rapid-Cycle Flux", desc: "Increases rate of auto-fire drastically.", cost: 20 },
+      armor: { level: 1, max: 5, name: "Nano Plating Core", desc: "Adds +60 Max HP & instantly heals Citadel.", cost: 25 },
+      shield: { level: 1, max: 5, name: "Aegis Deflector", desc: "Enhances max shield capacity & recharge speed.", cost: 25 },
+      pierce: { level: 1, max: 3, name: "High-Energy Pierce", desc: "Allows shots to pierce multiple foes in line.", cost: 30 },
+      damage: { level: 1, max: 5, name: "Antimatter Rounds", desc: "Increases standard shot impact damage.", cost: 25 }
+    };
+
+    const abilities = {
+      emp: { cd: 0, maxCd: 12 },
+      storm: { cd: 0, maxCd: 18, duration: 0, maxDuration: 4.0 },
+      missiles: { cd: 0, maxCd: 14 }
+    };
+
+    let bullets = [];
+    let enemyBullets = [];
+    let enemies = [];
+    let particles = [];
+    let floatingTexts = [];
+    let pickups = [];
+
+    const pointer = { x: 0, y: 0, isDown: false };
+
+    /* =========================================================
+       CANVAS RESIZE & DPI SCALING
+       ========================================================= */
+    function resizeCanvas() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      centerX = width / 2;
+      centerY = height / 2;
+      citadel.radius = Math.max(34, Math.min(width, height) * 0.055);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    /* =========================================================
+       INPUT CONTROLLERS
+       ========================================================= */
+    function handlePointer(clientX, clientY) {
+      pointer.x = clientX;
+      pointer.y = clientY;
+      const dx = clientX - centerX;
+      const dy = clientY - centerY;
+      citadel.angle = Math.atan2(dy, dx);
+      citadel.isManualAiming = true;
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      if (pointer.isDown) handlePointer(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('mousedown', (e) => {
+      if (e.target.closest('button') || e.target.closest('#upgradeModal') || e.target.closest('#startModal') || e.target.closest('#gameOverModal') || e.target.closest('#pauseModal')) return;
+      pointer.isDown = true;
+      handlePointer(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('mouseup', () => {
+      pointer.isDown = false;
+      citadel.isManualAiming = false;
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (e.touches.length > 0) {
+        pointer.isDown = true;
+        handlePointer(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (e.touches.length > 0) {
+        handlePointer(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      if (e.touches.length === 0) {
+        pointer.isDown = false;
+        citadel.isManualAiming = false;
+      }
+    }, { passive: false });
+
+    window.addEventListener('keydown', (e) => {
+      if (gameState !== 'PLAYING') return;
+      if (e.key === '1') triggerEmp();
+      if (e.key === '2') triggerOverchargeStorm();
+      if (e.key === '3') triggerSmartMissiles();
+      if (e.key === 'p' || e.key === 'P') togglePause();
+    });
+
+    /* =========================================================
+       SUPER ABILITIES
+       ========================================================= */
+    function triggerEmp() {
+      if (abilities.emp.cd > 0) return;
+      abilities.emp.cd = abilities.emp.maxCd;
+      audio.playEmp();
+      screenShake = 15;
+      enemyBullets = [];
+
+      enemies.forEach(en => {
+        const dmg = en.isBoss ? 400 : 250;
+        en.hp -= dmg;
+        createFloatingText(`EMP -${dmg}`, en.x, en.y, '#38bdf8');
+        createExplosion(en.x, en.y, '#38bdf8', 8);
+      });
+
+      createShockwave(centerX, centerY, Math.max(width, height) * 0.7, '#06b6d4', 24);
+    }
+
+    function triggerOverchargeStorm() {
+      if (abilities.storm.cd > 0 || abilities.storm.duration > 0) return;
+      abilities.storm.duration = abilities.storm.maxDuration;
+      abilities.storm.cd = abilities.storm.maxCd;
+      audio.playLaser();
+      citadel.shield = citadel.maxShield;
+      createShockwave(centerX, centerY, citadel.radius * 2.5, '#f472b6', 12);
+      createFloatingText("OVERCHARGE ACTIVE!", centerX, centerY - 60, '#f472b6');
+    }
+
+    function triggerSmartMissiles() {
+      if (abilities.missiles.cd > 0) return;
+      abilities.missiles.cd = abilities.missiles.maxCd;
+      audio.playLaser();
+
+      const count = 8;
+      for (let i = 0; i < count; i++) {
+        const ang = (Math.PI * 2 / count) * i;
+        bullets.push({
+          x: centerX + Math.cos(ang) * (citadel.radius + 10),
+          y: centerY + Math.sin(ang) * (citadel.radius + 10),
+          vx: Math.cos(ang) * 4,
+          vy: Math.sin(ang) * 4,
+          isHoming: true,
+          damage: 55,
+          color: '#fbbf24',
+          radius: 5,
+          trail: [],
+          life: 240
+        });
+      }
+    }
+
+    function updateAutoAim() {
+      if (!citadel.autoAim || citadel.isManualAiming) return;
+      if (enemies.length === 0) return;
+
+      let bestTarget = null;
+      let closestDist = Infinity;
+
+      for (let en of enemies) {
+        if (en.isBoss) {
+          bestTarget = en;
+          break;
+        }
+        const d = Math.hypot(en.x - centerX, en.y - centerY);
+        if (d < closestDist) {
+          closestDist = d;
+          bestTarget = en;
+        }
+      }
+
+      if (bestTarget) {
+        const targetAngle = Math.atan2(bestTarget.y - centerY, bestTarget.x - centerX);
+        let diff = targetAngle - citadel.angle;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        citadel.angle += diff * 0.28;
+      }
+    }
+
+    function shootTurret() {
+      citadel.recoil = 5;
+      audio.playLaser();
+
+      const speed = 14;
+      const baseDmg = 24 + (upgrades.damage.level - 1) * 9;
+      const pierceCount = upgrades.pierce.level;
+      const cannonLvl = upgrades.cannons.level;
+      const bOffset = citadel.radius + 6;
+
+      const fireBullet = (angleOffset, color = '#22d3ee') => {
+        const ang = citadel.angle + angleOffset;
+        bullets.push({
+          x: centerX + Math.cos(ang) * bOffset,
+          y: centerY + Math.sin(ang) * bOffset,
+          vx: Math.cos(ang) * speed,
+          vy: Math.sin(ang) * speed,
+          damage: baseDmg,
+          pierce: pierceCount,
+          color,
+          radius: 4.5,
+          trail: []
+        });
+      };
+
+      if (cannonLvl === 1) {
+        fireBullet(0);
+      } else if (cannonLvl === 2) {
+        fireBullet(-0.08);
+        fireBullet(0.08);
+      } else if (cannonLvl === 3) {
+        fireBullet(-0.16);
+        fireBullet(0);
+        fireBullet(0.16);
+      } else {
+        [-0.22, -0.07, 0.07, 0.22].forEach(off => fireBullet(off, '#fbbf24'));
+      }
+    }
+
+    /* =========================================================
+       ENEMIES & COMBAT
+       ========================================================= */
+    class Enemy {
+      constructor(type, wave, diff) {
+        this.type = type;
+        this.wave = wave;
+
+        const speedScale = diff === 'casual' ? 0.7 : (diff === 'normal' ? 1.0 : 1.25);
+        const hpScale = diff === 'casual' ? 0.75 : (diff === 'normal' ? 1.0 : 1.3);
+
+        const pad = 50;
+        const side = Math.floor(Math.random() * 4);
+        if (side === 0) { this.x = Math.random() * width; this.y = -pad; }
+        else if (side === 1) { this.x = width + pad; this.y = Math.random() * height; }
+        else if (side === 2) { this.x = Math.random() * width; this.y = height + pad; }
+        else { this.x = -pad; this.y = Math.random() * height; }
+
+        this.shootTimer = 90 + Math.random() * 60;
+        this.isBoss = (type === 'boss');
+        this.telegraphTimer = 0;
+
+        if (type === 'drone') {
+          this.radius = 14;
+          this.speed = (1.6 + Math.min(wave * 0.05, 1.2)) * speedScale;
+          this.hp = Math.round((20 + wave * 5) * hpScale);
+          this.color = '#06b6d4';
+          this.score = 50;
+          this.damage = diff === 'casual' ? 6 : 12;
+        } else if (type === 'mech') {
+          this.radius = 22;
+          this.speed = (0.9 + Math.min(wave * 0.03, 0.6)) * speedScale;
+          this.hp = Math.round((70 + wave * 15) * hpScale);
+          this.color = '#f59e0b';
+          this.score = 120;
+          this.damage = diff === 'casual' ? 12 : 22;
+        } else if (type === 'boss') {
+          this.radius = 46;
+          this.speed = 0.55 * speedScale;
+          this.hp = Math.round((800 + wave * 300) * hpScale);
+          this.color = '#f43f5e';
+          this.score = 2000;
+          this.damage = diff === 'casual' ? 20 : 35;
+          this.attackPhase = 0;
+        }
+        this.maxHp = this.hp;
+        this.angle = 0;
+      }
+
+      update() {
+        const dx = centerX - this.x;
+        const dy = centerY - this.y;
+        const dist = Math.hypot(dx, dy);
+        this.angle = Math.atan2(dy, dx);
+
+        if (this.isBoss) {
+          if (dist > citadel.radius + 150) {
+            this.x += Math.cos(this.angle) * this.speed;
+            this.y += Math.sin(this.angle) * this.speed;
+          } else {
+            this.x += Math.cos(this.angle + Math.PI / 2) * 0.5;
+            this.y += Math.sin(this.angle + Math.PI / 2) * 0.5;
+          }
+
+          this.shootTimer--;
+          if (this.shootTimer <= 30) {
+            this.telegraphTimer = 30 - this.shootTimer;
+          }
+          if (this.shootTimer <= 0) {
+            this.shootTimer = 110;
+            this.telegraphTimer = 0;
+            for (let i = 0; i < 6; i++) {
+              const bAng = (Math.PI * 2 / 6) * i + this.angle;
+              enemyBullets.push({
+                x: this.x,
+                y: this.y,
+                vx: Math.cos(bAng) * 2.8,
+                vy: Math.sin(bAng) * 2.8,
+                radius: 4,
+                color: '#f43f5e',
+                damage: selectedDifficulty === 'casual' ? 8 : 14
+              });
+            }
+          }
+        } else {
+          this.x += Math.cos(this.angle) * this.speed;
+          this.y += Math.sin(this.angle) * this.speed;
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+
+        if (this.telegraphTimer > 0) {
+          ctx.strokeStyle = `rgba(244, 63, 94, ${this.telegraphTimer / 30})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(0, 0, this.radius + (30 - this.telegraphTimer) * 2, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        ctx.rotate(this.angle + Math.PI / 2);
+
+        if (this.type === 'drone') {
+          ctx.fillStyle = '#082f49';
+          ctx.strokeStyle = this.color;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(0, -this.radius);
+          ctx.lineTo(this.radius, this.radius);
+          ctx.lineTo(0, this.radius * 0.5);
+          ctx.lineTo(-this.radius, this.radius);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        } else if (this.type === 'mech') {
+          ctx.fillStyle = '#291802';
+          ctx.strokeStyle = this.color;
+          ctx.lineWidth = 2.5;
+          ctx
