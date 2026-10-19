@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>CYBER CITADEL: ARCADE DEFENSE</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Last Defence">
+  <title>CYBER CITADEL: LAST DEFENCE CYBORG</title>
+
+  <!-- Cyber Cyborg Web App Icon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23050b1a'/%3E%3Cstop offset='100%25' stop-color='%23000208'/%3E%3C/linearGradient%3E%3ClinearGradient id='neon' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%2306b6d4'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='110' fill='url(%23bg)' stroke='%2306b6d4' stroke-width='16'/%3E%3Cpath d='M256 50 L410 120 L410 270 Q410 390 256 460 Q102 390 102 270 L102 120 Z' fill='%2309132b' stroke='url(%23neon)' stroke-width='18'/%3E%3Cpath d='M160 210 L220 210 L240 240 L200 255 Z' fill='%2300f5ff' filter='drop-shadow(0 0 10px %2300f5ff)'/%3E%3Ccircle cx='340' cy='230' r='26' fill='%23ff0055' filter='drop-shadow(0 0 14px %23ff0055)'/%3E%3Ccircle cx='340' cy='230' r='10' fill='%23ffffff'/%3E%3Cpath d='M210 330 L302 330' stroke='%2306b6d4' stroke-width='10' stroke-linecap='round'/%3E%3Cpath d='M230 350 L282 350' stroke='%2306b6d4' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%2306b6d4' stroke-width='3' stroke-dasharray='16 20' opacity='0.4'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23050b1a'/%3E%3Cstop offset='100%25' stop-color='%23000208'/%3E%3C/linearGradient%3E%3ClinearGradient id='neon' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%2306b6d4'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' fill='url(%23bg)'/%3E%3Cpath d='M256 50 L410 120 L410 270 Q410 390 256 460 Q102 390 102 270 L102 120 Z' fill='%2309132b' stroke='url(%23neon)' stroke-width='18'/%3E%3Cpath d='M160 210 L220 210 L240 240 L200 255 Z' fill='%2300f5ff'/%3E%3Ccircle cx='340' cy='230' r='26' fill='%23ff0055'/%3E%3Ccircle cx='340' cy='230' r='10' fill='%23ffffff'/%3E%3Cpath d='M210 330 L302 330' stroke='%2306b6d4' stroke-width='10' stroke-linecap='round'/%3E%3Cpath d='M230 350 L282 350' stroke='%2306b6d4' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,9 +30,10 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #030612;
+      background-color: #020510;
       font-family: 'Rajdhani', sans-serif;
       color: #f1f5f9;
+      position: fixed;
     }
     .font-arcade {
       font-family: 'Orbitron', monospace;
@@ -35,205 +44,217 @@
     .neon-gold {
       text-shadow: 0 0 10px rgba(250, 204, 21, 0.9), 0 0 20px rgba(250, 204, 21, 0.5);
     }
+    .neon-pink {
+      text-shadow: 0 0 10px rgba(236, 72, 153, 0.9), 0 0 20px rgba(236, 72, 153, 0.5);
+    }
     .glass-ui {
-      background: rgba(9, 14, 32, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+      background: rgba(8, 14, 30, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+    }
+    /* iOS Safe Area Utilities */
+    .ios-safe-top {
+      padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+    }
+    .ios-safe-bottom {
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
     }
     @keyframes pulse-ring {
-      0% { transform: scale(0.96); opacity: 0.9; }
-      50% { transform: scale(1.03); opacity: 1; }
-      100% { transform: scale(0.96); opacity: 0.9; }
+      0% { transform: scale(0.97); opacity: 0.9; }
+      50% { transform: scale(1.02); opacity: 1; }
+      100% { transform: scale(0.97); opacity: 0.9; }
     }
     .pulse-glow {
-      animation: pulse-ring 1.2s infinite ease-in-out;
+      animation: pulse-ring 1.3s infinite ease-in-out;
     }
   </style>
 </head>
-<body class="relative w-screen h-screen overflow-hidden select-none bg-[#020510]">
+<body class="relative w-full h-full overflow-hidden select-none bg-[#020510]">
 
   <!-- GAME CANVAS -->
   <canvas id="gameCanvas" class="absolute inset-0 z-0 block w-full h-full cursor-crosshair"></canvas>
 
-  <!-- TOP HEADER HUD -->
-  <header class="absolute top-0 left-0 right-0 z-20 pointer-events-none p-2 sm:p-4 flex justify-between items-start gap-2">
+  <!-- TOP HUD (Notch / Dynamic Island Aware) -->
+  <header class="absolute top-0 left-0 right-0 z-20 pointer-events-none ios-safe-top px-3 sm:px-5 flex justify-between items-start gap-2">
     <!-- Citadel Health & Shield -->
-    <div class="pointer-events-auto flex flex-col gap-1 glass-ui p-2.5 sm:p-3 rounded-2xl border border-cyan-500/40 min-w-[145px] sm:min-w-[210px]">
-      <div class="flex justify-between items-center text-[11px] sm:text-xs font-arcade font-bold">
-        <span class="text-cyan-400">CORE HULL</span>
+    <div class="pointer-events-auto flex flex-col gap-1 glass-ui p-2 sm:p-2.5 rounded-2xl border border-cyan-500/40 min-w-[135px] sm:min-w-[190px]">
+      <div class="flex justify-between items-center text-[10px] sm:text-xs font-arcade font-bold">
+        <span class="text-cyan-400">CYBORG CORE</span>
         <span id="hpText" class="text-emerald-400 font-black">250/250</span>
       </div>
-      <div class="w-full h-3 sm:h-3.5 bg-black/60 rounded-full overflow-hidden p-0.5 border border-cyan-500/50">
+      <div class="w-full h-2.5 sm:h-3 bg-black/60 rounded-full overflow-hidden p-0.5 border border-cyan-500/50">
         <div id="hpBar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full transition-all duration-150" style="width: 100%"></div>
       </div>
 
-      <div class="flex justify-between items-center text-[10px] sm:text-[11px] font-arcade mt-0.5">
+      <div class="flex justify-between items-center text-[9px] sm:text-[10px] font-arcade mt-0.5">
         <span class="text-indigo-300">SHIELD</span>
         <span id="shieldText" class="text-indigo-200">100/100</span>
       </div>
-      <div class="w-full h-2 bg-black/60 rounded-full overflow-hidden p-0.5 border border-indigo-500/50">
+      <div class="w-full h-1.5 sm:h-2 bg-black/60 rounded-full overflow-hidden p-0.5 border border-indigo-500/50">
         <div id="shieldBar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-400 rounded-full transition-all duration-150" style="width: 100%"></div>
       </div>
 
-      <!-- Currency & Second Wind Badge -->
-      <div class="flex items-center justify-between pt-1 border-t border-cyan-500/20 text-xs sm:text-sm font-arcade">
+      <div class="flex items-center justify-between pt-1 border-t border-cyan-500/20 text-[11px] sm:text-xs font-arcade">
         <div class="text-amber-300 font-black flex items-center gap-1 neon-gold">
           <span>⚡</span>
           <span id="scrapCount">0</span> CR
         </div>
-        <div id="secondWindBadge" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/60 font-bold" title="Survives 1 fatal blow">
-          REVIVE: READY
+        <div id="secondWindBadge" class="text-[9px] px-1 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/60 font-bold">
+          REVIVE
         </div>
       </div>
     </div>
 
-    <!-- Center: Wave & Score Display -->
+    <!-- Center Wave Counter -->
     <div class="pointer-events-auto text-center flex flex-col items-center">
-      <div class="glass-ui px-3 sm:px-6 py-1.5 sm:py-2 rounded-2xl border border-cyan-500/50 shadow-lg">
-        <div class="text-[10px] sm:text-xs font-arcade text-gray-300 tracking-wider">
-          WAVE <span id="waveNumber" class="text-cyan-300 font-black text-sm sm:text-lg">1</span>
-          <span id="difficultyBadge" class="ml-1 text-[9px] px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-700">CASUAL</span>
+      <div class="glass-ui px-3 sm:px-5 py-1 sm:py-1.5 rounded-2xl border border-cyan-500/50">
+        <div class="text-[9px] sm:text-xs font-arcade text-gray-300">
+          WAVE <span id="waveNumber" class="text-cyan-300 font-black text-sm sm:text-base">1</span>
         </div>
-        <div id="scoreDisplay" class="font-arcade text-lg sm:text-2xl font-black text-white neon-cyan tracking-wider">000000</div>
+        <div id="scoreDisplay" class="font-arcade text-base sm:text-xl font-black text-white neon-cyan">000000</div>
       </div>
-      
-      <!-- Warning Alert Banner -->
-      <div id="alertBanner" class="hidden mt-2 font-arcade font-bold text-xs sm:text-sm text-amber-300 bg-amber-950/85 px-3 py-1 rounded-xl border border-amber-500/80 pulse-glow">
+      <div id="alertBanner" class="hidden mt-1.5 font-arcade font-bold text-[10px] sm:text-xs text-amber-300 bg-amber-950/90 px-2.5 py-0.5 rounded-xl border border-amber-500/80 pulse-glow">
         ⚠️ INCOMING HOSTILE BARRAGE
       </div>
     </div>
 
-    <!-- Right: Quick Action Buttons -->
-    <div class="pointer-events-auto flex items-center gap-1.5 sm:gap-2">
-      <button id="upgradeBtn" class="glass-ui border-2 border-amber-400 hover:border-amber-300 text-amber-300 px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-xl font-arcade font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-lg active:scale-95 transition-all">
+    <!-- Controls -->
+    <div class="pointer-events-auto flex items-center gap-1.5">
+      <button id="upgradeBtn" class="glass-ui border-2 border-amber-400 text-amber-300 px-2.5 py-1.5 rounded-xl font-arcade font-black text-xs flex items-center gap-1 active:scale-95 transition-all">
         <span>⚙️</span>
         <span class="hidden sm:inline">SHOP</span>
       </button>
-      <button id="soundBtn" class="glass-ui border border-cyan-500/50 text-cyan-300 p-2 sm:p-2.5 rounded-xl font-arcade text-sm active:scale-95 transition-all">
+      <button id="soundBtn" class="glass-ui border border-cyan-500/50 text-cyan-300 p-1.5 rounded-xl font-arcade text-xs active:scale-95 transition-all">
         🔊
       </button>
-      <button id="pauseBtn" class="glass-ui border border-cyan-500/50 text-cyan-300 p-2 sm:p-2.5 rounded-xl font-arcade text-sm active:scale-95 transition-all">
+      <button id="pauseBtn" class="glass-ui border border-cyan-500/50 text-cyan-300 p-1.5 rounded-xl font-arcade text-xs active:scale-95 transition-all">
         ⏸
       </button>
     </div>
   </header>
 
-  <!-- BOTTOM MOBILE CONTROL TRAY -->
-  <footer class="absolute bottom-3 sm:bottom-4 left-0 right-0 z-20 pointer-events-none px-3 sm:px-6 flex justify-between items-end gap-2">
-    <!-- Left: Toggles (Auto Aim & Auto Fire) -->
-    <div class="pointer-events-auto flex flex-col gap-2">
-      <button id="toggleAutoAim" class="glass-ui border-2 border-emerald-400 text-emerald-300 px-3 py-2 rounded-xl text-xs font-arcade font-bold tracking-wider active:scale-95 transition-all shadow-md flex items-center gap-2">
-        <span id="autoAimLed" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-        AUTO-AIM: <span id="autoAimText">ON</span>
+  <!-- BOTTOM MOBILE ACTION BAR (iPhone Home Indicator Aware) -->
+  <footer class="absolute bottom-0 left-0 right-0 z-20 pointer-events-none ios-safe-bottom px-3 sm:px-6 flex justify-between items-end gap-2">
+    <!-- Left: Toggles -->
+    <div class="pointer-events-auto flex flex-col gap-1.5">
+      <button id="toggleAutoAim" class="glass-ui border border-emerald-400 text-emerald-300 px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs font-arcade font-bold active:scale-95 transition-all flex items-center gap-1.5">
+        <span id="autoAimLed" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        AIM: <span id="autoAimText">AUTO</span>
       </button>
-      <button id="toggleAutoFire" class="glass-ui border border-cyan-400 text-cyan-300 px-3 py-1.5 rounded-xl text-[11px] font-arcade font-semibold active:scale-95 transition-all shadow-md flex items-center gap-2">
-        <span id="autoFireLed" class="w-2 h-2 rounded-full bg-cyan-400"></span>
-        AUTO-FIRE: <span id="autoFireText">ON</span>
+      <button id="toggleAutoFire" class="glass-ui border border-cyan-400 text-cyan-300 px-2.5 py-1 rounded-xl text-[10px] sm:text-xs font-arcade font-semibold active:scale-95 transition-all flex items-center gap-1.5">
+        <span id="autoFireLed" class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+        FIRE: <span id="autoFireText">AUTO</span>
       </button>
     </div>
 
-    <!-- Right: Big Touch Panic & Super Buttons -->
-    <div class="pointer-events-auto flex gap-2 sm:gap-3">
-      <!-- Panic Button: EMP Shockwave (Clears all bullets and damages nearby enemies) -->
-      <button id="btnEmp" class="relative glass-ui border-2 border-cyan-400 rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center active:scale-90 transition-transform shadow-xl overflow-hidden">
-        <div id="empCdOverlay" class="absolute inset-0 bg-cyan-950/85 origin-bottom transition-all pointer-events-none" style="height: 0%;"></div>
-        <span class="relative z-10 text-xl sm:text-2xl">⚡</span>
-        <span class="relative z-10 text-[9px] font-arcade font-bold text-cyan-200">EMP [1]</span>
+    <!-- Right: Big Touch Super Buttons -->
+    <div class="pointer-events-auto flex gap-2">
+      <button id="btnEmp" class="relative glass-ui border-2 border-cyan-400 rounded-2xl w-13 h-13 sm:w-16 sm:h-16 p-2 flex flex-col items-center justify-center active:scale-90 transition-transform overflow-hidden shadow-lg">
+        <div id="empCdOverlay" class="absolute inset-0 bg-cyan-950/85 origin-bottom pointer-events-none" style="height: 0%;"></div>
+        <span class="relative z-10 text-lg sm:text-xl">⚡</span>
+        <span class="relative z-10 text-[8px] sm:text-[9px] font-arcade font-bold text-cyan-200">EMP</span>
       </button>
 
-      <!-- Super Button: Invincible Overcharge Storm -->
-      <button id="btnStorm" class="relative glass-ui border-2 border-pink-400 rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center active:scale-90 transition-transform shadow-xl overflow-hidden">
-        <div id="stormCdOverlay" class="absolute inset-0 bg-pink-950/85 origin-bottom transition-all pointer-events-none" style="height: 0%;"></div>
-        <span class="relative z-10 text-xl sm:text-2xl">🔥</span>
-        <span class="relative z-10 text-[9px] font-arcade font-bold text-pink-200">STORM [2]</span>
+      <button id="btnStorm" class="relative glass-ui border-2 border-pink-400 rounded-2xl w-13 h-13 sm:w-16 sm:h-16 p-2 flex flex-col items-center justify-center active:scale-90 transition-transform overflow-hidden shadow-lg">
+        <div id="stormCdOverlay" class="absolute inset-0 bg-pink-950/85 origin-bottom pointer-events-none" style="height: 0%;"></div>
+        <span class="relative z-10 text-lg sm:text-xl">🔥</span>
+        <span class="relative z-10 text-[8px] sm:text-[9px] font-arcade font-bold text-pink-200">STORM</span>
       </button>
 
-      <!-- Smart Missiles Barrage -->
-      <button id="btnMissiles" class="relative glass-ui border-2 border-amber-400 rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center active:scale-90 transition-transform shadow-xl overflow-hidden">
-        <div id="missilesCdOverlay" class="absolute inset-0 bg-amber-950/85 origin-bottom transition-all pointer-events-none" style="height: 0%;"></div>
-        <span class="relative z-10 text-xl sm:text-2xl">🚀</span>
-        <span class="relative z-10 text-[9px] font-arcade font-bold text-amber-200">SWARM [3]</span>
+      <button id="btnMissiles" class="relative glass-ui border-2 border-amber-400 rounded-2xl w-13 h-13 sm:w-16 sm:h-16 p-2 flex flex-col items-center justify-center active:scale-90 transition-transform overflow-hidden shadow-lg">
+        <div id="missilesCdOverlay" class="absolute inset-0 bg-amber-950/85 origin-bottom pointer-events-none" style="height: 0%;"></div>
+        <span class="relative z-10 text-lg sm:text-xl">🚀</span>
+        <span class="relative z-10 text-[8px] sm:text-[9px] font-arcade font-bold text-amber-200">SWARM</span>
       </button>
     </div>
   </footer>
 
   <!-- UPGRADE TERMINAL MODAL -->
-  <div id="upgradeModal" class="hidden absolute inset-0 z-40 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
-    <div class="glass-ui border-2 border-cyan-400 rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[92vh]">
-      <div class="flex justify-between items-center pb-3 border-b border-cyan-500/30">
+  <div id="upgradeModal" class="hidden absolute inset-0 z-40 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
+    <div class="glass-ui border-2 border-cyan-400 rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[88vh]">
+      <div class="flex justify-between items-center pb-2 border-b border-cyan-500/30">
         <div>
-          <h2 class="font-arcade text-lg sm:text-2xl font-black text-cyan-300 neon-cyan">ARSENAL LAB</h2>
-          <p class="text-xs text-gray-300">Equip powerful upgrades to dominate the swarm</p>
+          <h2 class="font-arcade text-lg sm:text-xl font-black text-cyan-300 neon-cyan">CYBORG ARSENAL</h2>
+          <p class="text-[11px] text-gray-300">Upgrade defense cores & weapon grids</p>
         </div>
         <button id="closeUpgradeBtn" class="text-gray-400 hover:text-white font-arcade text-xl p-2">✕</button>
       </div>
 
-      <div class="my-3 flex justify-between items-center bg-cyan-950/50 p-2.5 rounded-xl border border-cyan-500/40 font-arcade">
-        <span class="text-xs text-gray-300">CYBER CREDITS:</span>
-        <span id="modalCreditCount" class="font-black text-amber-300 text-base sm:text-lg neon-gold">0 CR</span>
+      <div class="my-2.5 flex justify-between items-center bg-cyan-950/60 p-2 rounded-xl border border-cyan-500/40 font-arcade">
+        <span class="text-xs text-gray-300">CREDITS:</span>
+        <span id="modalCreditCount" class="font-black text-amber-300 text-sm sm:text-base neon-gold">0 CR</span>
       </div>
 
-      <div id="upgradeList" class="flex-1 overflow-y-auto space-y-2 pr-1">
-        <!-- Rendered by JS -->
-      </div>
+      <div id="upgradeList" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
 
-      <div class="mt-3 pt-3 border-t border-cyan-500/30 flex justify-end">
-        <button id="resumeFromUpgradeBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-arcade font-bold text-xs sm:text-sm tracking-wider shadow-lg active:scale-95 transition-all">
-          APPLY TECH & RESUME
+      <div class="mt-2.5 pt-2 border-t border-cyan-500/30 flex justify-end">
+        <button id="resumeFromUpgradeBtn" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-arcade font-bold text-xs sm:text-sm tracking-wider shadow-lg active:scale-95 transition-all">
+          EQUIP & RESUME MISSION
         </button>
       </div>
     </div>
   </div>
 
-  <!-- START & DIFFICULTY SELECTION MODAL -->
+  <!-- START MODAL (WITH "BY LUKE CHIU") -->
   <div id="startModal" class="absolute inset-0 z-50 bg-[#020510]/95 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="glass-ui border-2 border-cyan-400 rounded-3xl max-w-md w-full p-5 sm:p-7 text-center shadow-2xl">
-      <div class="w-14 h-14 mx-auto mb-2 rounded-2xl bg-cyan-950 border border-cyan-400 flex items-center justify-center text-3xl shadow-lg shadow-cyan-500/20">
-        🛡️
+    <div class="glass-ui border-2 border-cyan-400 rounded-3xl max-w-sm sm:max-w-md w-full p-5 sm:p-6 text-center shadow-2xl">
+      <!-- Cyber Icon Logo -->
+      <div class="w-16 h-16 mx-auto mb-2 rounded-2xl bg-gradient-to-br from-cyan-950 to-indigo-950 border-2 border-cyan-400 flex items-center justify-center shadow-lg shadow-cyan-500/25 relative overflow-hidden">
+        <svg class="w-11 h-11" viewBox="0 0 100 100">
+          <polygon points="50,10 88,28 88,68 50,92 12,68 12,28" fill="#081b33" stroke="#00f5ff" stroke-width="4"/>
+          <circle cx="36" cy="45" r="7" fill="#00f5ff"/>
+          <circle cx="64" cy="45" r="9" fill="#ff0055"/>
+          <circle cx="64" cy="45" r="3.5" fill="#fff"/>
+          <line x1="38" y1="68" x2="62" y2="68" stroke="#00f5ff" stroke-width="4" stroke-linecap="round"/>
+        </svg>
       </div>
-      <h1 class="font-arcade text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-200 to-pink-500 neon-cyan mb-1">
+
+      <h1 class="font-arcade text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-200 to-pink-500 neon-cyan tracking-wider">
         CYBER CITADEL
       </h1>
-      <p class="font-arcade text-xs text-cyan-300 mb-4 tracking-widest">ARCADE SURVIVAL DEFENSE</p>
-
-      <!-- Ease-of-Play highlights -->
-      <div class="bg-gray-950/80 border border-cyan-800/70 rounded-xl p-3 text-left text-xs space-y-1.5 mb-4 text-gray-300">
-        <p class="text-emerald-400 font-bold">✨ Designed for Relaxed Mobile Play:</p>
-        <p>• <b class="text-white">Smart Auto-Aim</b> tracks threats automatically. Touch anywhere to manually guide shots.</p>
-        <p>• <b class="text-white">Second Wind</b> prevents sudden defeat by reviving you once per match.</p>
-        <p>• Enemies drop <b class="text-emerald-300">Repair Orbs</b>, <b class="text-amber-300">Credits</b>, and <b class="text-pink-300">Nova Screen Bombs</b>!</p>
+      <p class="font-arcade text-[11px] sm:text-xs text-cyan-300 tracking-widest uppercase">LAST DEFENCE CYBORG</p>
+      
+      <!-- Luke Chiu Creator Stamp -->
+      <div class="my-2 inline-block px-3 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-400/50">
+        <p class="font-arcade text-[10px] text-pink-300 font-bold tracking-widest neon-pink">BY LUKE CHIU</p>
       </div>
 
-      <!-- Difficulty Selector -->
-      <div class="mb-5 text-left">
-        <label class="block text-[11px] font-arcade text-gray-400 mb-1.5 font-bold uppercase">Select Difficulty Mode:</label>
-        <div class="grid grid-cols-3 gap-2">
-          <button data-diff="casual" class="diff-btn active py-2 rounded-xl font-arcade text-xs font-bold border-2 border-emerald-400 bg-emerald-950/60 text-emerald-300">
+      <div class="bg-gray-950/80 border border-cyan-800/60 rounded-xl p-3 text-left text-xs space-y-1 mb-4 text-gray-300">
+        <p class="text-emerald-400 font-bold">🛡️ Defense Briefing:</p>
+        <p>• <b class="text-white">Smart Auto-Aim</b> targets swarms. Tap anywhere to fire manually.</p>
+        <p>• Collect <b class="text-emerald-300">Green Orbs</b> to repair your core cyborg.</p>
+        <p>• Use <b class="text-cyan-300">EMP</b> and <b class="text-pink-300">Storm</b> to survive hostile waves.</p>
+      </div>
+
+      <div class="mb-4 text-left">
+        <label class="block text-[10px] font-arcade text-gray-400 mb-1 font-bold uppercase">Difficulty Mode:</label>
+        <div class="grid grid-cols-3 gap-1.5">
+          <button data-diff="casual" class="diff-btn active py-1.5 rounded-xl font-arcade text-[11px] font-bold border-2 border-emerald-400 bg-emerald-950/60 text-emerald-300">
             CASUAL
           </button>
-          <button data-diff="normal" class="diff-btn py-2 rounded-xl font-arcade text-xs font-bold border border-cyan-700 bg-gray-900/60 text-gray-300">
+          <button data-diff="normal" class="diff-btn py-1.5 rounded-xl font-arcade text-[11px] font-bold border border-cyan-700 bg-gray-900/60 text-gray-300">
             NORMAL
           </button>
-          <button data-diff="hard" class="diff-btn py-2 rounded-xl font-arcade text-xs font-bold border border-rose-900 bg-gray-900/60 text-gray-400">
+          <button data-diff="hard" class="diff-btn py-1.5 rounded-xl font-arcade text-[11px] font-bold border border-rose-900 bg-gray-900/60 text-gray-400">
             HARD
           </button>
         </div>
       </div>
 
-      <button id="startGameBtn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-arcade font-black text-sm sm:text-base tracking-wider shadow-lg shadow-cyan-500/30 active:scale-95 transition-all">
-        START DEFENSE MISSION
+      <button id="startGameBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-arcade font-black text-xs sm:text-sm tracking-wider shadow-lg shadow-cyan-500/30 active:scale-95 transition-all">
+        DEPLOY CYBORG DEFENSE
       </button>
     </div>
   </div>
 
   <!-- GAME OVER MODAL -->
   <div id="gameOverModal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="glass-ui border-2 border-rose-500 rounded-3xl max-w-sm w-full p-5 sm:p-7 text-center shadow-2xl">
-      <h2 class="font-arcade text-2xl font-black text-rose-500 tracking-wider mb-1">RUN COMPLETE</h2>
-      <p class="text-xs text-rose-300 mb-4 font-semibold uppercase">Citadel Hull Breached</p>
+    <div class="glass-ui border-2 border-rose-500 rounded-3xl max-w-xs sm:max-w-sm w-full p-5 text-center shadow-2xl">
+      <h2 class="font-arcade text-xl sm:text-2xl font-black text-rose-500 tracking-wider mb-1">MISSION FAILED</h2>
+      <p class="text-[11px] text-rose-300 mb-3 uppercase">Cyborg Core Offline</p>
 
-      <div class="bg-gray-950/80 border border-gray-800 rounded-xl p-3 mb-5 space-y-2 text-left text-xs font-arcade">
+      <div class="bg-gray-950/80 border border-gray-800 rounded-xl p-3 mb-4 space-y-1.5 text-left text-xs font-arcade">
         <div class="flex justify-between">
           <span class="text-gray-400">SCORE:</span>
           <span id="finalScore" class="font-bold text-cyan-300">0</span>
@@ -243,17 +264,13 @@
           <span id="bestScore" class="font-bold text-amber-300">0</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-gray-400">WAVES CLEARED:</span>
+          <span class="text-gray-400">WAVES:</span>
           <span id="finalWave" class="font-bold text-white">0</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-400">ENEMIES DESTROYED:</span>
-          <span id="finalKills" class="font-bold text-emerald-400">0</span>
         </div>
       </div>
 
-      <button id="restartBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 text-white font-arcade font-bold text-xs sm:text-sm tracking-wider shadow-lg active:scale-95 transition-all">
-        PLAY AGAIN
+      <button id="restartBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-600 text-white font-arcade font-bold text-xs tracking-wider shadow-lg active:scale-95 transition-all">
+        REBOOT SYSTEM
       </button>
     </div>
   </div>
@@ -261,9 +278,9 @@
   <!-- PAUSE MODAL -->
   <div id="pauseModal" class="hidden absolute inset-0 z-40 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="glass-ui border border-cyan-400 rounded-2xl max-w-xs w-full p-5 text-center">
-      <h2 class="font-arcade text-lg font-bold text-white mb-3">MISSION PAUSED</h2>
+      <h2 class="font-arcade text-base font-bold text-white mb-3">MISSION PAUSED</h2>
       <div class="space-y-2">
-        <button id="resumePauseBtn" class="w-full py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-arcade font-bold text-xs tracking-wider">RESUME</button>
+        <button id="resumePauseBtn" class="w-full py-2.5 rounded-lg bg-cyan-500 text-black font-arcade font-bold text-xs tracking-wider">RESUME</button>
         <button id="restartFromPauseBtn" class="w-full py-2.5 rounded-lg bg-gray-800 text-rose-400 font-arcade font-bold text-xs tracking-wider">RESTART</button>
       </div>
     </div>
@@ -271,7 +288,7 @@
 
   <script>
     /* =========================================================
-       AUDIO SYNTHESIZER (ZERO ASSET WEB AUDIO API)
+       AUDIO SYNTHESIZER
        ========================================================= */
     class RetroAudio {
       constructor() {
@@ -293,14 +310,14 @@
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(800, now);
-        osc.frequency.exponentialRampToValueAtTime(140, now + 0.1);
-        gain.gain.setValueAtTime(0.1, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        osc.frequency.setValueAtTime(850, now);
+        osc.frequency.exponentialRampToValueAtTime(120, now + 0.09);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
         osc.connect(gain);
         gain.connect(this.ctx.destination);
         osc.start(now);
-        osc.stop(now + 0.1);
+        osc.stop(now + 0.09);
       }
       playExplosion(isBig = false) {
         if (this.muted || !this.ctx) return;
@@ -334,9 +351,9 @@
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(200, now);
-        osc.frequency.exponentialRampToValueAtTime(1100, now + 0.25);
-        osc.frequency.exponentialRampToValueAtTime(60, now + 0.6);
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.25);
+        osc.frequency.exponentialRampToValueAtTime(50, now + 0.6);
         gain.gain.setValueAtTime(0.28, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
         osc.connect(gain);
@@ -352,7 +369,7 @@
           const gain = this.ctx.createGain();
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(freq, now + idx * 0.05);
-          gain.gain.setValueAtTime(0.1, now + idx * 0.05);
+          gain.gain.setValueAtTime(0.09, now + idx * 0.05);
           gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.08);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -367,8 +384,8 @@
         const gain = this.ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(600, now);
-        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
-        gain.gain.setValueAtTime(0.09, now);
+        osc.frequency.exponentialRampToValueAtTime(1300, now + 0.1);
+        gain.gain.setValueAtTime(0.08, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
         osc.connect(gain);
         gain.connect(this.ctx.destination);
@@ -391,7 +408,7 @@
     let centerY = 0;
 
     let gameState = 'START';
-    let selectedDifficulty = 'casual'; // 'casual', 'normal', 'hard'
+    let selectedDifficulty = 'casual';
     let score = 0;
     let highScore = parseInt(localStorage.getItem('cyber_citadel_casual_hi') || '0', 10);
     let credits = 30;
@@ -401,14 +418,13 @@
     let totalKills = 0;
     let screenShake = 0;
 
-    // Citadel Base Stats (Very generous base HP & Shield)
     const citadel = {
-      radius: 40,
+      radius: 36,
       maxHp: 250,
       hp: 250,
       maxShield: 100,
       shield: 100,
-      shieldRegen: 0.25,
+      shieldRegen: 0.28,
       shieldDelay: 0,
       angle: -Math.PI / 2,
       fireCooldown: 0,
@@ -419,24 +435,21 @@
       isManualAiming: false
     };
 
-    // Upgrades Catalog (Affordable and powerful)
     const upgrades = {
-      cannons: { level: 1, max: 4, name: "Multi-Cannon Spreader", desc: "Adds twin, triple & quad auto spread blasters.", cost: 25 },
-      fireRate: { level: 1, max: 6, name: "Rapid-Cycle Flux", desc: "Increases rate of auto-fire drastically.", cost: 20 },
-      armor: { level: 1, max: 5, name: "Nano Plating Core", desc: "Adds +60 Max HP & instantly heals Citadel.", cost: 25 },
-      shield: { level: 1, max: 5, name: "Aegis Deflector", desc: "Enhances max shield capacity & recharge speed.", cost: 25 },
-      pierce: { level: 1, max: 3, name: "High-Energy Pierce", desc: "Allows shots to pierce multiple foes in line.", cost: 30 },
-      damage: { level: 1, max: 5, name: "Antimatter Rounds", desc: "Increases standard shot impact damage.", cost: 25 }
+      cannons: { level: 1, max: 4, name: "Plasma Spread Guns", desc: "Adds twin, triple & quad spread blasters.", cost: 25 },
+      fireRate: { level: 1, max: 6, name: "Overclocked Relay", desc: "Drastically speeds up auto-fire rate.", cost: 20 },
+      armor: { level: 1, max: 5, name: "Cyborg Chobham Hull", desc: "+60 Max Core HP & instant hull repair.", cost: 25 },
+      shield: { level: 1, max: 5, name: "Kinetic Barrier", desc: "Increases shield barrier & recharge rate.", cost: 25 },
+      pierce: { level: 1, max: 3, name: "Laser Penetration", desc: "Shots pierce multiple advancing foes.", cost: 30 },
+      damage: { level: 1, max: 5, name: "Flux Core Boost", desc: "Amplifies base shot destruction power.", cost: 25 }
     };
 
-    // Super Abilities
     const abilities = {
       emp: { cd: 0, maxCd: 12 },
       storm: { cd: 0, maxCd: 18, duration: 0, maxDuration: 4.0 },
       missiles: { cd: 0, maxCd: 14 }
     };
 
-    // Entities Arrays
     let bullets = [];
     let enemyBullets = [];
     let enemies = [];
@@ -444,15 +457,10 @@
     let floatingTexts = [];
     let pickups = [];
 
-    // Pointer Input
-    const pointer = {
-      x: 0,
-      y: 0,
-      isDown: false
-    };
+    const pointer = { x: 0, y: 0, isDown: false };
 
     /* =========================================================
-       CANVAS RESIZE & DPI SCALING
+       CANVAS RESIZE & DPI (SAFE AREA AWARE)
        ========================================================= */
     function resizeCanvas() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -463,13 +471,14 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       centerX = width / 2;
       centerY = height / 2;
-      citadel.radius = Math.max(34, Math.min(width, height) * 0.055);
+      citadel.radius = Math.max(32, Math.min(width, height) * 0.052);
     }
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 100));
     resizeCanvas();
 
     /* =========================================================
-       TOUCH & POINTER EVENT CONTROLLERS
+       POINTER & TOUCH CONTROLLERS
        ========================================================= */
     function handlePointer(clientX, clientY) {
       pointer.x = clientX;
@@ -495,7 +504,6 @@
       citadel.isManualAiming = false;
     });
 
-    // Touch handling
     canvas.addEventListener('touchstart', (e) => {
       e.preventDefault();
       if (e.touches.length > 0) {
@@ -519,40 +527,24 @@
       }
     }, { passive: false });
 
-    // Keyboard Shortcuts
-    window.addEventListener('keydown', (e) => {
-      if (gameState !== 'PLAYING') return;
-      if (e.key === '1') triggerEmp();
-      if (e.key === '2') triggerOverchargeStorm();
-      if (e.key === '3') triggerSmartMissiles();
-      if (e.key === 'p' || e.key === 'P') togglePause();
-    });
-
     /* =========================================================
-       SUPER ABILITIES IMPLEMENTATION
+       SUPER POWERS
        ========================================================= */
-    // 1. EMP Blast (Panic Button)
     function triggerEmp() {
       if (abilities.emp.cd > 0) return;
       abilities.emp.cd = abilities.emp.maxCd;
       audio.playEmp();
       screenShake = 15;
-
-      // Vaporize all incoming enemy bullets
       enemyBullets = [];
-
-      // Massive damage to all current hostiles on screen
       enemies.forEach(en => {
-        const dmg = en.isBoss ? 400 : 250;
+        const dmg = en.isBoss ? 420 : 260;
         en.hp -= dmg;
         createFloatingText(`EMP -${dmg}`, en.x, en.y, '#38bdf8');
         createExplosion(en.x, en.y, '#38bdf8', 8);
       });
-
       createShockwave(centerX, centerY, Math.max(width, height) * 0.7, '#06b6d4', 24);
     }
 
-    // 2. Overcharge Storm (Temporary Invulnerability + Laser Rapid Fire)
     function triggerOverchargeStorm() {
       if (abilities.storm.cd > 0 || abilities.storm.duration > 0) return;
       abilities.storm.duration = abilities.storm.maxDuration;
@@ -560,15 +552,13 @@
       audio.playLaser();
       citadel.shield = citadel.maxShield;
       createShockwave(centerX, centerY, citadel.radius * 2.5, '#f472b6', 12);
-      createFloatingText("OVERCHARGE ACTIVE!", centerX, centerY - 60, '#f472b6');
+      createFloatingText("CYBORG OVERCHARGE!", centerX, centerY - 60, '#f472b6');
     }
 
-    // 3. Smart Missiles Barrage (Launches 8 homing missiles toward threats)
     function triggerSmartMissiles() {
       if (abilities.missiles.cd > 0) return;
       abilities.missiles.cd = abilities.missiles.maxCd;
       audio.playLaser();
-
       const count = 8;
       for (let i = 0; i < count; i++) {
         const ang = (Math.PI * 2 / count) * i;
@@ -588,21 +578,15 @@
     }
 
     /* =========================================================
-       SMART AUTO-TARGETING ENGINE
+       AUTO AIM & SHOOTING
        ========================================================= */
     function updateAutoAim() {
-      if (!citadel.autoAim || citadel.isManualAiming) return;
-      if (enemies.length === 0) return;
-
-      // Find highest priority threat (Boss > Closest to Citadel)
+      if (!citadel.autoAim || citadel.isManualAiming || enemies.length === 0) return;
       let bestTarget = null;
       let closestDist = Infinity;
 
       for (let en of enemies) {
-        if (en.isBoss) {
-          bestTarget = en;
-          break;
-        }
+        if (en.isBoss) { bestTarget = en; break; }
         const d = Math.hypot(en.x - centerX, en.y - centerY);
         if (d < closestDist) {
           closestDist = d;
@@ -615,17 +599,13 @@
         let diff = targetAngle - citadel.angle;
         while (diff < -Math.PI) diff += Math.PI * 2;
         while (diff > Math.PI) diff -= Math.PI * 2;
-        citadel.angle += diff * 0.28; // Smooth lock-on tracking
+        citadel.angle += diff * 0.28;
       }
     }
 
-    /* =========================================================
-       SHOOTING & WEAPON SYSTEM
-       ========================================================= */
     function shootTurret() {
       citadel.recoil = 5;
       audio.playLaser();
-
       const speed = 14;
       const baseDmg = 24 + (upgrades.damage.level - 1) * 9;
       const pierceCount = upgrades.pierce.level;
@@ -647,30 +627,19 @@
         });
       };
 
-      if (cannonLvl === 1) {
-        fireBullet(0);
-      } else if (cannonLvl === 2) {
-        fireBullet(-0.08);
-        fireBullet(0.08);
-      } else if (cannonLvl === 3) {
-        fireBullet(-0.16);
-        fireBullet(0);
-        fireBullet(0.16);
-      } else {
-        // Quad Blast
-        [-0.22, -0.07, 0.07, 0.22].forEach(off => fireBullet(off, '#fbbf24'));
-      }
+      if (cannonLvl === 1) fireBullet(0);
+      else if (cannonLvl === 2) { fireBullet(-0.08); fireBullet(0.08); }
+      else if (cannonLvl === 3) { fireBullet(-0.16); fireBullet(0); fireBullet(0.16); }
+      else [-0.22, -0.07, 0.07, 0.22].forEach(off => fireBullet(off, '#fbbf24'));
     }
 
     /* =========================================================
-       ENEMY DEFINITIONS & BALANCED COMBAT
+       ENEMIES
        ========================================================= */
     class Enemy {
       constructor(type, wave, diff) {
         this.type = type;
         this.wave = wave;
-
-        // Difficulty multipliers
         const speedScale = diff === 'casual' ? 0.7 : (diff === 'normal' ? 1.0 : 1.25);
         const hpScale = diff === 'casual' ? 0.75 : (diff === 'normal' ? 1.0 : 1.3);
 
@@ -683,7 +652,7 @@
 
         this.shootTimer = 90 + Math.random() * 60;
         this.isBoss = (type === 'boss');
-        this.telegraphTimer = 0; // Visual warning before firing
+        this.telegraphTimer = 0;
 
         if (type === 'drone') {
           this.radius = 14;
@@ -706,7 +675,6 @@
           this.color = '#f43f5e';
           this.score = 2000;
           this.damage = diff === 'casual' ? 20 : 35;
-          this.attackPhase = 0;
         }
         this.maxHp = this.hp;
         this.angle = 0;
@@ -719,24 +687,19 @@
         this.angle = Math.atan2(dy, dx);
 
         if (this.isBoss) {
-          // Boss approaches then stays at comfortable distance
           if (dist > citadel.radius + 150) {
             this.x += Math.cos(this.angle) * this.speed;
             this.y += Math.sin(this.angle) * this.speed;
           } else {
-            // Strafe slowly
             this.x += Math.cos(this.angle + Math.PI / 2) * 0.5;
             this.y += Math.sin(this.angle + Math.PI / 2) * 0.5;
           }
 
           this.shootTimer--;
-          if (this.shootTimer <= 30) {
-            this.telegraphTimer = 30 - this.shootTimer; // 30 frame visual telegraph
-          }
+          if (this.shootTimer <= 30) this.telegraphTimer = 30 - this.shootTimer;
           if (this.shootTimer <= 0) {
             this.shootTimer = 110;
             this.telegraphTimer = 0;
-            // Generous telegraphed 6-way star attack
             for (let i = 0; i < 6; i++) {
               const bAng = (Math.PI * 2 / 6) * i + this.angle;
               enemyBullets.push({
@@ -751,7 +714,6 @@
             }
           }
         } else {
-          // Standard enemy pathing towards central citadel
           this.x += Math.cos(this.angle) * this.speed;
           this.y += Math.sin(this.angle) * this.speed;
         }
@@ -761,7 +723,6 @@
         ctx.save();
         ctx.translate(this.x, this.y);
 
-        // Telegraph circle warning before boss attack
         if (this.telegraphTimer > 0) {
           ctx.strokeStyle = `rgba(244, 63, 94, ${this.telegraphTimer / 30})`;
           ctx.lineWidth = 2;
@@ -817,7 +778,6 @@
         }
         ctx.restore();
 
-        // Clear Health Bar above enemy
         if (this.hp < this.maxHp || this.isBoss) {
           const barW = this.isBoss ? 70 : 28;
           const pct = Math.max(0, this.hp / this.maxHp);
@@ -833,7 +793,6 @@
       currentWave = num;
       document.getElementById('waveNumber').innerText = currentWave;
       const isBoss = (currentWave % 5 === 0);
-
       const alertBanner = document.getElementById('alertBanner');
       if (isBoss) {
         alertBanner.innerText = "⚠️ DREADNOUGHT BOSS DETECTED!";
@@ -841,33 +800,21 @@
       } else {
         alertBanner.classList.add('hidden');
       }
-
       enemiesToSpawn = 10 + currentWave * 4;
       waveSpawnTimer = 0;
     }
 
-    /* =========================================================
-       PICKUP DROPS & CASUAL RECOVERY ITEMS
-       ========================================================= */
     function spawnDrops(x, y, isBoss = false) {
-      // 1. Cyber Credits Drop
       const credVal = isBoss ? 40 : (selectedDifficulty === 'casual' ? 4 : 2);
       pickups.push({ x, y, type: 'credit', value: credVal, r: 9, life: 700 });
-
-      // 2. High-chance Repair Nano Pack (Heals tower)
       if (Math.random() < 0.35 || isBoss) {
         pickups.push({ x: x + 10, y: y + 10, type: 'heal', value: 35, r: 10, life: 700 });
       }
-
-      // 3. Screen Wipe Bomb (Rare exciting casual drop!)
       if (Math.random() < 0.08 || isBoss) {
         pickups.push({ x: x - 10, y: y - 10, type: 'bomb', value: 0, r: 11, life: 700 });
       }
     }
 
-    /* =========================================================
-       PARTICLES & COMBAT EFFECTS
-       ========================================================= */
     function createExplosion(x, y, color = '#38bdf8', count = 12) {
       for (let i = 0; i < count; i++) {
         const ang = Math.random() * Math.PI * 2;
@@ -885,15 +832,7 @@
     }
 
     function createShockwave(x, y, maxR, color = '#06b6d4', width = 12) {
-      particles.push({
-        type: 'wave',
-        x, y,
-        r: 6,
-        maxR,
-        color,
-        lineWidth: width,
-        alpha: 1
-      });
+      particles.push({ type: 'wave', x, y, r: 6, maxR, color, lineWidth: width, alpha: 1 });
     }
 
     function createFloatingText(text, x, y, color = '#38bdf8') {
@@ -905,24 +844,17 @@
        ========================================================= */
     function updateGame() {
       if (gameState !== 'PLAYING') return;
-
-      // Screen shake decay
       if (screenShake > 0) screenShake *= 0.88;
 
-      // Smart Auto-Aim calculation
       updateAutoAim();
-
-      // Turret recoil decay
       if (citadel.recoil > 0) citadel.recoil *= 0.85;
 
-      // Shield Recharge System (Rapid passive regeneration)
       if (citadel.shieldDelay > 0) {
         citadel.shieldDelay--;
       } else if (citadel.shield < citadel.maxShield) {
         citadel.shield = Math.min(citadel.maxShield, citadel.shield + citadel.shieldRegen);
       }
 
-      // Abilities cooldown decays
       if (abilities.emp.cd > 0) abilities.emp.cd -= 1 / 60;
       if (abilities.storm.cd > 0) abilities.storm.cd -= 1 / 60;
       if (abilities.missiles.cd > 0) abilities.missiles.cd -= 1 / 60;
@@ -931,16 +863,11 @@
       updateCooldownUI('stormCdOverlay', abilities.storm.cd, abilities.storm.maxCd);
       updateCooldownUI('missilesCdOverlay', abilities.missiles.cd, abilities.missiles.maxCd);
 
-      // Overcharge Storm Active state
       if (abilities.storm.duration > 0) {
         abilities.storm.duration -= 1 / 60;
-        // Fire rapid twin plasma bolts
-        if (Math.random() < 0.4) {
-          shootTurret();
-        }
+        if (Math.random() < 0.4) shootTurret();
       }
 
-      // Continuous Auto-Fire / Pointer Fire
       const fireInterval = Math.max(5, 14 - upgrades.fireRate.level * 1.5);
       if (citadel.fireCooldown > 0) {
         citadel.fireCooldown--;
@@ -949,11 +876,9 @@
         citadel.fireCooldown = fireInterval;
       }
 
-      // Bullets Update & generous hit detection
+      // Bullets
       for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i];
-
-        // Smart Homing guidance
         if (b.isHoming && enemies.length > 0) {
           const target = enemies[0];
           const ang = Math.atan2(target.y - b.y, target.x - b.x);
@@ -965,17 +890,14 @@
 
         b.x += b.vx;
         b.y += b.vy;
-
         b.trail.push({ x: b.x, y: b.y });
         if (b.trail.length > 4) b.trail.shift();
 
-        // Screen cull
         if (b.x < -30 || b.x > width + 30 || b.y < -30 || b.y > height + 30) {
           bullets.splice(i, 1);
           continue;
         }
 
-        // Enemy Collision (with generous hitbox buffer)
         let hit = false;
         for (let j = enemies.length - 1; j >= 0; j--) {
           const en = enemies[j];
@@ -984,24 +906,19 @@
             en.hp -= b.damage;
             createFloatingText(b.damage, b.x, b.y, b.color);
             createExplosion(b.x, b.y, b.color, 4);
-
-            if (b.pierce && b.pierce > 1) {
-              b.pierce--;
-            } else {
-              hit = true;
-            }
+            if (b.pierce && b.pierce > 1) b.pierce--;
+            else hit = true;
             break;
           }
         }
         if (hit) bullets.splice(i, 1);
       }
 
-      // Enemy Projectiles Update
+      // Enemy Projectiles
       for (let i = enemyBullets.length - 1; i >= 0; i--) {
         const eb = enemyBullets[i];
         eb.x += eb.vx;
         eb.y += eb.vy;
-
         const distCore = Math.hypot(eb.x - centerX, eb.y - centerY);
         if (distCore < citadel.radius + eb.radius) {
           takeDamage(eb.damage);
@@ -1009,7 +926,6 @@
           enemyBullets.splice(i, 1);
           continue;
         }
-
         if (eb.x < -30 || eb.x > width + 30 || eb.y < -30 || eb.y > height + 30) {
           enemyBullets.splice(i, 1);
         }
@@ -1028,21 +944,19 @@
         enemiesToSpawn--;
       }
 
-      // Wave cleared
       if (enemiesToSpawn <= 0 && enemies.length === 0) {
         credits += currentWave * 6;
         score += currentWave * 150;
         updateHUD();
-        createFloatingText(`WAVE ${currentWave} COMPLETE! +${currentWave * 6} CR`, centerX, centerY - 60, '#34d399');
+        createFloatingText(`WAVE ${currentWave} CLEAR! +${currentWave * 6} CR`, centerX, centerY - 60, '#34d399');
         startWave(currentWave + 1);
       }
 
-      // Update Enemies
+      // Enemy update
       for (let i = enemies.length - 1; i >= 0; i--) {
         const en = enemies[i];
         en.update();
 
-        // Hull contact
         const distCore = Math.hypot(en.x - centerX, en.y - centerY);
         if (distCore < citadel.radius + en.radius) {
           takeDamage(en.damage);
@@ -1052,33 +966,27 @@
           continue;
         }
 
-        // Enemy Death
         if (en.hp <= 0) {
           totalKills++;
           audio.playExplosion(en.isBoss);
           screenShake = en.isBoss ? 16 : 4;
           createExplosion(en.x, en.y, en.color, en.isBoss ? 40 : 16);
           createShockwave(en.x, en.y, en.radius * 2, en.color);
-
           score += en.score;
           spawnDrops(en.x, en.y, en.isBoss);
-
           enemies.splice(i, 1);
           updateHUD();
         }
       }
 
-      // Pickups & Autotargeting magnet pull
+      // Magnetic Pickups
       for (let i = pickups.length - 1; i >= 0; i--) {
         const p = pickups[i];
         p.life--;
-
-        // Magnetic Attraction
         const dx = centerX - p.x;
         const dy = centerY - p.y;
         const dist = Math.hypot(dx, dy);
 
-        // Strong magnet to make collecting effortless
         if (dist < 260) {
           p.x += (dx / dist) * 7.5;
           p.y += (dy / dist) * 7.5;
@@ -1094,19 +1002,17 @@
             audio.playHeal();
             createFloatingText(`+${p.value} HP`, p.x, p.y, '#34d399');
           } else if (p.type === 'bomb') {
-            // Screen Nova Bomb collected!
             audio.playEmp();
             screenShake = 18;
             enemyBullets = [];
             enemies.forEach(e => { e.hp -= 300; });
             createShockwave(centerX, centerY, Math.max(width, height), '#ec4899', 28);
-            createFloatingText("NOVA BOMB BLAST!", centerX, centerY - 40, '#ec4899');
+            createFloatingText("NOVA WIPEOUT!", centerX, centerY - 40, '#ec4899');
           }
           pickups.splice(i, 1);
           updateHUD();
           continue;
         }
-
         if (p.life <= 0) pickups.splice(i, 1);
       }
 
@@ -1125,7 +1031,7 @@
         }
       }
 
-      // Floating Texts
+      // Texts
       for (let i = floatingTexts.length - 1; i >= 0; i--) {
         const ft = floatingTexts[i];
         ft.y += ft.vy;
@@ -1135,15 +1041,10 @@
       }
     }
 
-    /* =========================================================
-       DAMAGE, SHIELD & "SECOND WIND" REVIVE
-       ========================================================= */
     function takeDamage(amt) {
-      // Overcharge Storm makes citadel invincible
       if (abilities.storm.duration > 0) return;
-
       screenShake = 9;
-      citadel.shieldDelay = 100; // brief recharge delay
+      citadel.shieldDelay = 100;
 
       if (citadel.shield > 0) {
         if (citadel.shield >= amt) {
@@ -1159,13 +1060,10 @@
         citadel.hp = Math.max(0, citadel.hp - amt);
       }
 
-      // Check for Casual-Friendly "Second Wind" Revive
       if (citadel.hp <= 0 && citadel.hasSecondWind) {
         citadel.hasSecondWind = false;
         citadel.hp = Math.round(citadel.maxHp * 0.45);
         citadel.shield = citadel.maxShield;
-
-        // Massive defensive nuclear shockwave
         audio.playEmp();
         screenShake = 22;
         enemyBullets = [];
@@ -1174,12 +1072,11 @@
         createFloatingText("SECOND WIND REVIVAL!", centerX, centerY - 60, '#34d399');
 
         const badge = document.getElementById('secondWindBadge');
-        badge.innerText = "REVIVE: USED";
-        badge.className = "text-[10px] px-1.5 py-0.5 rounded bg-gray-900 text-gray-500 border border-gray-700 font-bold";
+        badge.innerText = "REVIVED";
+        badge.className = "text-[9px] px-1 py-0.2 rounded bg-gray-900 text-gray-500 border border-gray-700 font-bold";
       } else if (citadel.hp <= 0) {
         gameOver();
       }
-
       updateHUD();
     }
 
@@ -1192,51 +1089,44 @@
       document.getElementById('finalScore').innerText = score;
       document.getElementById('bestScore').innerText = highScore;
       document.getElementById('finalWave').innerText = currentWave;
-      document.getElementById('finalKills').innerText = totalKills;
       document.getElementById('gameOverModal').classList.remove('hidden');
     }
 
     function updateCooldownUI(id, cur, max) {
       const el = document.getElementById(id);
-      if (!el) return;
-      el.style.height = cur <= 0 ? '0%' : `${(cur / max) * 100}%`;
+      if (el) el.style.height = cur <= 0 ? '0%' : `${(cur / max) * 100}%`;
     }
 
     function updateHUD() {
       const hpPct = Math.max(0, (citadel.hp / citadel.maxHp) * 100);
       const shieldPct = Math.max(0, (citadel.shield / citadel.maxShield) * 100);
-
       document.getElementById('hpBar').style.width = `${hpPct}%`;
       document.getElementById('hpText').innerText = `${Math.round(citadel.hp)}/${citadel.maxHp}`;
       document.getElementById('shieldBar').style.width = `${shieldPct}%`;
       document.getElementById('shieldText').innerText = `${Math.round(citadel.shield)}/${citadel.maxShield}`;
-
       document.getElementById('scoreDisplay').innerText = score.toString().padStart(6, '0');
       document.getElementById('scrapCount').innerText = credits;
     }
 
     /* =========================================================
-       CANVAS RENDERING
+       CANVAS RENDERING (CYBORG FORTRESS)
        ========================================================= */
     let gridOffset = 0;
     function render() {
       ctx.save();
-
-      // Screen Shake
       if (screenShake > 0) {
         const ox = (Math.random() * 2 - 1) * screenShake;
         const oy = (Math.random() * 2 - 1) * screenShake;
         ctx.translate(ox, oy);
       }
 
-      // Space Background
-      ctx.fillStyle = '#020512';
+      ctx.fillStyle = '#020510';
       ctx.fillRect(0, 0, width, height);
 
       // Cyber Grid
       ctx.strokeStyle = 'rgba(6, 182, 212, 0.07)';
       ctx.lineWidth = 1;
-      const gridSize = 48;
+      const gridSize = 46;
       gridOffset = (gridOffset + 0.2) % gridSize;
 
       for (let x = gridOffset; x < width; x += gridSize) {
@@ -1252,7 +1142,7 @@
         ctx.stroke();
       }
 
-      // Range Guideline
+      // Range indicator
       ctx.strokeStyle = 'rgba(6, 182, 212, 0.12)';
       ctx.setLineDash([4, 6]);
       ctx.beginPath();
@@ -1260,9 +1150,9 @@
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Draw Laser Aim Ray
+      // Laser guide line
       ctx.save();
-      ctx.strokeStyle = citadel.autoAim ? 'rgba(52, 211, 153, 0.28)' : 'rgba(6, 182, 212, 0.28)';
+      ctx.strokeStyle = citadel.autoAim ? 'rgba(52, 211, 153, 0.3)' : 'rgba(6, 182, 212, 0.3)';
       ctx.lineWidth = 1.5;
       ctx.setLineDash([3, 5]);
       ctx.beginPath();
@@ -1271,7 +1161,7 @@
       ctx.stroke();
       ctx.restore();
 
-      // Draw Pickups
+      // Pickups
       pickups.forEach(p => {
         ctx.save();
         ctx.translate(p.x, p.y);
@@ -1289,7 +1179,6 @@
           ctx.beginPath();
           ctx.arc(0, 0, p.r, 0, Math.PI * 2);
           ctx.fill();
-          // Cross symbol
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(-1.5, -4.5, 3, 9);
           ctx.fillRect(-4.5, -1.5, 9, 3);
@@ -1304,7 +1193,7 @@
         ctx.restore();
       });
 
-      // Draw Player Bullets
+      // Bullets
       bullets.forEach(b => {
         if (b.trail.length > 1) {
           ctx.strokeStyle = b.color;
@@ -1322,7 +1211,7 @@
         ctx.fill();
       });
 
-      // Draw Enemy Bullets
+      // Enemy Bullets
       enemyBullets.forEach(eb => {
         ctx.fillStyle = '#f43f5e';
         ctx.shadowColor = '#f43f5e';
@@ -1332,10 +1221,10 @@
         ctx.fill();
       });
 
-      // Draw Enemies
+      // Enemies
       enemies.forEach(en => en.draw());
 
-      // Draw Particles
+      // Particles
       particles.forEach(pt => {
         if (pt.type === 'wave') {
           ctx.save();
@@ -1357,8 +1246,8 @@
         }
       });
 
-      // Draw Citadel Fortress
-      drawCitadel();
+      // Cyborg Citadel Drawing
+      drawCyborgCitadel();
 
       // Floating Texts
       floatingTexts.forEach(ft => {
@@ -1376,7 +1265,7 @@
       ctx.restore();
     }
 
-    function drawCitadel() {
+    function drawCyborgCitadel() {
       ctx.save();
       ctx.translate(centerX, centerY);
 
@@ -1384,7 +1273,7 @@
       if (citadel.shield > 0) {
         const alpha = 0.2 + (citadel.shield / citadel.maxShield) * 0.35;
         ctx.strokeStyle = `rgba(99, 102, 241, ${alpha})`;
-        ctx.fillStyle = `rgba(99, 102, 241, ${alpha * 0.25})`;
+        ctx.fillStyle = `rgba(99, 102, 241, ${alpha * 0.22})`;
         ctx.lineWidth = 2.5;
         ctx.shadowColor = '#6366f1';
         ctx.shadowBlur = 14;
@@ -1394,10 +1283,10 @@
         ctx.stroke();
       }
 
-      // Base Hull Structure
+      // Cyborg Hex Plate Base
       ctx.strokeStyle = '#06b6d4';
       ctx.lineWidth = 3;
-      ctx.fillStyle = '#0a1024';
+      ctx.fillStyle = '#081126';
       ctx.shadowColor = '#06b6d4';
       ctx.shadowBlur = 14;
       ctx.beginPath();
@@ -1412,17 +1301,17 @@
       ctx.fill();
       ctx.stroke();
 
-      // Inner Core Glow
+      // Inner Rotating Ring
       ctx.save();
       ctx.rotate(Date.now() * 0.001);
-      ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.45)';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(0, 0, citadel.radius * 0.6, 0, Math.PI * 2);
+      ctx.arc(0, 0, citadel.radius * 0.65, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
 
-      // Turret Cannons
+      // Cyborg Turret Barrel & Eye
       ctx.save();
       ctx.rotate(citadel.angle);
       const recoilDist = -citadel.recoil;
@@ -1441,7 +1330,6 @@
         ctx.fillRect(recoilDist, 4, citadel.radius + 16, 6);
         ctx.strokeRect(recoilDist, 4, citadel.radius + 16, 6);
       } else {
-        // Multi-barrel array
         [-0.15, 0, 0.15].forEach(ang => {
           ctx.save();
           ctx.rotate(ang);
@@ -1451,26 +1339,25 @@
         });
       }
 
-      // Turret Center Dome
+      // Turret Dome
       ctx.fillStyle = '#0891b2';
       ctx.beginPath();
-      ctx.arc(recoilDist * 0.4, 0, citadel.radius * 0.4, 0, Math.PI * 2);
+      ctx.arc(recoilDist * 0.4, 0, citadel.radius * 0.42, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
-      // Indicator Aim Eye
-      ctx.fillStyle = citadel.autoAim ? '#34d399' : '#38bdf8';
+      // Cyborg Red/Cyan Optic Sensor
+      ctx.fillStyle = citadel.autoAim ? '#00f5ff' : '#ff0055';
+      ctx.shadowColor = citadel.autoAim ? '#00f5ff' : '#ff0055';
+      ctx.shadowBlur = 8;
       ctx.beginPath();
-      ctx.arc(recoilDist * 0.4 + 3, 0, 4.5, 0, Math.PI * 2);
+      ctx.arc(recoilDist * 0.4 + 4, 0, 4.5, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
       ctx.restore();
     }
 
-    /* =========================================================
-       ANIMATION LOOP
-       ========================================================= */
     function gameLoop() {
       updateGame();
       render();
@@ -1478,7 +1365,7 @@
     }
 
     /* =========================================================
-       UPGRADE SHOP CONTROLLER
+       SHOP & UI ACTIONS
        ========================================================= */
     function openUpgradeShop() {
       if (gameState === 'PLAYING') gameState = 'UPGRADE';
@@ -1502,20 +1389,20 @@
         const canAfford = credits >= upg.cost && !isMax;
 
         const row = document.createElement('div');
-        row.className = "flex items-center justify-between p-2.5 rounded-xl bg-gray-900/80 border border-cyan-500/25";
+        row.className = "flex items-center justify-between p-2 rounded-xl bg-gray-900/80 border border-cyan-500/25";
         row.innerHTML = `
           <div class="flex-1 mr-2">
             <div class="flex items-center gap-1.5">
-              <span class="font-arcade font-bold text-xs sm:text-sm text-cyan-300">${upg.name}</span>
-              <span class="text-[10px] font-arcade px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">LV ${upg.level}/${upg.max}</span>
+              <span class="font-arcade font-bold text-xs text-cyan-300">${upg.name}</span>
+              <span class="text-[9px] font-arcade px-1 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">LV ${upg.level}/${upg.max}</span>
             </div>
-            <p class="text-[11px] text-gray-400 mt-0.5">${upg.desc}</p>
+            <p class="text-[10px] text-gray-400 mt-0.5">${upg.desc}</p>
           </div>
           <div>
             ${isMax ? `
-              <span class="text-xs font-arcade font-bold text-emerald-400 px-2.5 py-1.5 bg-emerald-950/60 rounded-lg border border-emerald-800">MAX</span>
+              <span class="text-[11px] font-arcade font-bold text-emerald-400 px-2 py-1 bg-emerald-950/60 rounded-lg border border-emerald-800">MAX</span>
             ` : `
-              <button data-upgrade="${key}" class="upg-buy-btn px-3 py-1.5 rounded-lg font-arcade font-bold text-xs ${canAfford ? 'bg-cyan-500 hover:bg-cyan-400 text-black shadow-md shadow-cyan-500/30' : 'bg-gray-800 text-gray-500'}">
+              <button data-upgrade="${key}" class="upg-buy-btn px-2.5 py-1.5 rounded-lg font-arcade font-bold text-[11px] ${canAfford ? 'bg-cyan-500 hover:bg-cyan-400 text-black shadow-md shadow-cyan-500/30' : 'bg-gray-800 text-gray-500'}">
                 ${upg.cost} CR
               </button>
             `}
@@ -1554,9 +1441,6 @@
       updateHUD();
     }
 
-    /* =========================================================
-       INITIALIZATION & EVENT BINDINGS
-       ========================================================= */
     function startGame() {
       audio.init();
       document.getElementById('startModal').classList.add('hidden');
@@ -1577,8 +1461,8 @@
       citadel.hasSecondWind = true;
 
       const badge = document.getElementById('secondWindBadge');
-      badge.innerText = "REVIVE: READY";
-      badge.className = "text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/60 font-bold";
+      badge.innerText = "REVIVE";
+      badge.className = "text-[9px] px-1 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/60 font-bold";
 
       bullets = [];
       enemyBullets = [];
@@ -1606,7 +1490,7 @@
       }
     }
 
-    // Difficulty selection buttons
+    // Difficulty buttons
     document.querySelectorAll('.diff-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         document.querySelectorAll('.diff-btn').forEach(b => {
@@ -1616,43 +1500,31 @@
         const target = e.currentTarget;
         target.classList.add('active', 'border-2', 'border-emerald-400', 'text-emerald-300', 'bg-emerald-950/60');
         selectedDifficulty = target.dataset.diff;
-        document.getElementById('difficultyBadge').innerText = selectedDifficulty.toUpperCase();
       });
     });
 
-    // Auto-Aim Toggle
+    // Auto Aim & Fire Toggles
     const autoAimBtn = document.getElementById('toggleAutoAim');
     const autoAimText = document.getElementById('autoAimText');
     const autoAimLed = document.getElementById('autoAimLed');
     autoAimBtn.addEventListener('click', () => {
       citadel.autoAim = !citadel.autoAim;
-      if (citadel.autoAim) {
-        autoAimText.innerText = 'ON';
-        autoAimBtn.className = 'glass-ui border-2 border-emerald-400 text-emerald-300 px-3 py-2 rounded-xl text-xs font-arcade font-bold tracking-wider active:scale-95 transition-all shadow-md flex items-center gap-2';
-        autoAimLed.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-      } else {
-        autoAimText.innerText = 'OFF';
-        autoAimBtn.className = 'glass-ui border border-gray-600 text-gray-400 px-3 py-2 rounded-xl text-xs font-arcade font-bold tracking-wider active:scale-95 transition-all shadow-md flex items-center gap-2';
-        autoAimLed.className = 'w-2.5 h-2.5 rounded-full bg-gray-500';
-      }
+      autoAimText.innerText = citadel.autoAim ? 'AUTO' : 'MANUAL';
+      autoAimLed.className = `w-2 h-2 rounded-full ${citadel.autoAim ? 'bg-emerald-400' : 'bg-gray-500'}`;
     });
 
-    // Auto-Fire Toggle
     const autoFireBtn = document.getElementById('toggleAutoFire');
     const autoFireText = document.getElementById('autoFireText');
     const autoFireLed = document.getElementById('autoFireLed');
     autoFireBtn.addEventListener('click', () => {
       citadel.autoFire = !citadel.autoFire;
-      autoFireText.innerText = citadel.autoFire ? 'ON' : 'OFF';
-      autoFireLed.className = `w-2 h-2 rounded-full ${citadel.autoFire ? 'bg-cyan-400' : 'bg-gray-500'}`;
+      autoFireText.innerText = citadel.autoFire ? 'AUTO' : 'TAP';
+      autoFireLed.className = `w-1.5 h-1.5 rounded-full ${citadel.autoFire ? 'bg-cyan-400' : 'bg-gray-500'}`;
     });
 
-    // Super Action Buttons
     document.getElementById('btnEmp').addEventListener('click', triggerEmp);
     document.getElementById('btnStorm').addEventListener('click', triggerOverchargeStorm);
     document.getElementById('btnMissiles').addEventListener('click', triggerSmartMissiles);
-
-    // Modal Events
     document.getElementById('startGameBtn').addEventListener('click', startGame);
     document.getElementById('restartBtn').addEventListener('click', () => {
       document.getElementById('gameOverModal').classList.add('hidden');
@@ -1670,7 +1542,6 @@
       gameState = 'PLAYING';
     });
 
-    // Sound Toggle
     const soundBtn = document.getElementById('soundBtn');
     soundBtn.addEventListener('click', () => {
       audio.init();
@@ -1678,7 +1549,6 @@
       soundBtn.innerText = audio.muted ? '🔇' : '🔊';
     });
 
-    // Start loop
     requestAnimationFrame(gameLoop);
   </script>
 </body>
